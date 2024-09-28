@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+#menu{
+  width:100vw;
+  position:fixed;
+  top:0vh;
+  background-color: blueviolet;
+}
