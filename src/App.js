@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { Button, Card, Menubar, InputText } from "primereact";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import Request from "./Request.js";
 const items = [
   {
     label: "File",
@@ -142,6 +143,7 @@ function App() {
         />
         <Button>Check</Button>
         <Card>Hello</Card>
+        <Request>s</Request>
         <a
           className="App-link"
           href="https://reactjs.org"
