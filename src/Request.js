@@ -5,7 +5,8 @@ function Request() {
 
   function handleClick() {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost:8080");
+      xhr.open("GET", "http://localhost:8080/grocery/items");
+      xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
       if (xhr.status === 200) {
         setData(JSON.parse(xhr.responseText));
