@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
+import "./RegistrationForm.css";
 
 function RegistrationForm() {
   const [password, setPassword] = useState("");
