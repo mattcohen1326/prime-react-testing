@@ -4,7 +4,5 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background-image:url('./../public/thickporg_1.png');
-    background-repeat: repeat;
-    background-size: 10%;
+    background-image: linear-gradient(to bottom right, #3DA556, #4A96CF, #0066FF);
 }

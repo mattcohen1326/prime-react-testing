@@ -5,7 +5,7 @@ import "./RegistrationForm.css";
 function RegistrationForm() {
   const [password, setPassword] = useState("");
   const [data, setData] = useState(null);
-
+  const [username, setUsername] = useState("");
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -28,9 +28,24 @@ function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="password" value={password} onChange={handlePasswordChange} />
+      <div>
+        <h1>Username</h1>
+        <input type="username" value={username}></input>
+      </div>
+      <div>
+        <h1>Password</h1>
+        <input
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+      </div>
       <button type="submit">Register</button>
-      {data ? <div>{JSON.stringify(data)}</div> : <div>Loading...</div>}
+      {data ? (
+        <div id="data">{JSON.stringify(data)}</div>
+      ) : (
+        <div>Loading...</div>
+      )}
     </form>
   );
 }

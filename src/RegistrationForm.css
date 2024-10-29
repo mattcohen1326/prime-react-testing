@@ -1,8 +1,32 @@
 form {
     width:30vw;
-    background-color:black;
-    height:20vh;
+    background-color:#6CDAE7;
+    height:30vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+    border-radius: 10px;
+    flex-wrap:wrap;
+    border:beige solid 1px;
+    padding-left:1%;
+}
+
+
+form div{
+    width: 90%;
+    display: flex;
+    align-items: flex-start;
+    font-size:1vh;
+    flex-wrap:wrap;
+}
+
+form div input{
+    width:100%;
+}
+
+form button {
+    background-color: black;
+    color:white;
+    width:90%;
+    margin-top:2%;
 }
