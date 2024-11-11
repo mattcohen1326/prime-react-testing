@@ -9,7 +9,9 @@ function RegistrationForm() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+  const handleUsernamecChange = (event) => {
+    setUsername(event.target.value);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -23,14 +25,19 @@ function RegistrationForm() {
         setData(JSON.parse(xhr.responseText));
       }
     };
-    xhr.send(hashedPassword);
+    const payload = { username: username, password: hashedPassword };
+    xhr.send(JSON.stringify(payload));
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <h1>Username</h1>
-        <input type="username" value={username}></input>
+        <input
+          type="text"
+          value={username}
+          onChange={handleUsernamecChange}
+        ></input>
       </div>
       <div>
         <h1>Password</h1>
