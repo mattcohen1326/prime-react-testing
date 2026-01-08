@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-
+import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
   const [items, setItems] = useState([]);
@@ -209,7 +209,7 @@ function Meals() {
   const remainingCalories = 2000 - totalCalories;
   const remainingProtein = 220 - totalProtein;
   return (
-    <div style={{ maxWidth: 520 }}>
+    <div className="Forms">
       <img
         src="/thickporg_1.png"
         alt="Meal"
@@ -223,9 +223,7 @@ function Meals() {
         }}
       />
 
-      <label htmlFor="item">
-        <strong>Item:</strong>
-      </label>
+      <label htmlFor="item"></label>
       <select
         id="item"
         value={selectedItemId}

@@ -1,0 +1,11 @@
+body{
+  display:flex;
+  justify-content: center;
+  background-image: linear-gradient(to bottom right, #82e3a4, #4A96CF, #0066FF);
+}
+
+.Forms{
+  flex-wrap:wrap;
+  width:75vw;
+  padding:5vh;
+}
