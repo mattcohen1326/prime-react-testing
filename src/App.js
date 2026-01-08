@@ -4,6 +4,7 @@ import { Button, Card, Menubar, InputText } from "primereact";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import Request from "./Request.js";
 import RegistrationForm from "./RegistrationForm.js";
+import Meals from "./Meals.js";
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/homescreen" element={<HomeScreen />} />
+        <Route path="/meals" element={<Meals />} />
       </Routes>
     </BrowserRouter>
   );

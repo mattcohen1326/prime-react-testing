@@ -19,7 +19,7 @@ function RegistrationForm() {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8080/endpoint");
+    xhr.open("POST", "http://localhost:8080/register");
     xhr.onload = function () {
       if (xhr.status === 200) {
         setData(JSON.parse(xhr.responseText));
@@ -27,6 +27,16 @@ function RegistrationForm() {
     };
     const payload = { username: username, password: hashedPassword };
     xhr.send(JSON.stringify(payload));
+  };
+
+  const handleLogin = async () => {
+    fetch("http://localhost:8080/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((res) => res.json())
+      .then(setData);
   };
 
   return (
@@ -48,6 +58,9 @@ function RegistrationForm() {
         />
       </div>
       <button type="submit">Register</button>
+      <button type="button" onClick={handleLogin}>
+        Login
+      </button>
       {data ? (
         <div id="data">{JSON.stringify(data)}</div>
       ) : (
