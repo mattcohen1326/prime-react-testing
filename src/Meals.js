@@ -28,7 +28,7 @@ function Meals() {
   const [customCalories, setCustomCalories] = useState("");
   const [customProtein, setCustomProtein] = useState("");
   console.log("API_BASE:", API_BASE);
-  const DAILY_MEALS_ENDPOINT = "${API_BASE}/meals/getMealsForDay";
+  const DAILY_MEALS_ENDPOINT = `${API_BASE}/meals/getMealsForDay`;
 
   useEffect(() => {
     const loadItems = async () => {
@@ -36,7 +36,7 @@ function Meals() {
         setLoadingItems(true);
         setItemsError("");
 
-        const res = await fetch("${API_BASE}/generic_meals/get_all");
+        const res = await fetch(`${API_BASE}/generic_meals/get_all`);
         if (!res.ok)
           throw new Error(`Failed to load items (HTTP ${res.status})`);
 
@@ -120,7 +120,7 @@ function Meals() {
       setSendError("");
       setSendResult(null);
 
-      const res = await fetch("${API_BASE}/meals/addMeal", {
+      const res = await fetch(`${API_BASE}/meals/addMeal`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
