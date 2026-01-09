@@ -27,7 +27,7 @@ function Meals() {
   const [customName, setCustomName] = useState("");
   const [customCalories, setCustomCalories] = useState("");
   const [customProtein, setCustomProtein] = useState("");
-
+  console.log("API_BASE:", API_BASE);
   const DAILY_MEALS_ENDPOINT = "${API_BASE}/meals/getMealsForDay";
 
   useEffect(() => {
