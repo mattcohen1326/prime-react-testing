@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
   const [items, setItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState("");
 
