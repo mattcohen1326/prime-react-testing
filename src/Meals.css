@@ -1,8 +1,16 @@
-body{
-  display:flex;
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
   justify-content: center;
+  align-items: flex-start; /* or center if you want vertical center */
   background-image: linear-gradient(to bottom right, #82e3a4, #4A96CF, #0066FF);
 }
+
 
 .Forms{
   flex-wrap:wrap;
