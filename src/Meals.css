@@ -6,6 +6,49 @@ body{
 
 .Forms{
   flex-wrap:wrap;
-  width:75vw;
-  padding:5vh;
+  width:90vw;
+  padding:5vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
+
+.flex-item{
+  width: 100% !important;
+  display: flex;
+  justify-content: center;
+  margin-top:2vh;
+}
+
+.flex-item img{
+  width:10% !important;
+}
+.flex-item button{
+  width: 50%;
+}
+
+ .Forms form{
+  width: 75%;
+  display:flex;
+  justify-content: center;
+  padding: 2vw;
+  margin-top:2vh;
+ }
+
+ .Forms h3{
+  width: 75%;
+  text-align: center;
+  margin-top:2vh !important;
+ }
+
+ .flex-item div{
+  width: 75% !important;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+ }
+
+ .flex-item div div{
+  width: 100% !important;
+  gap: 1vw;
+ }

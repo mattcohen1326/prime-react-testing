@@ -3,6 +3,7 @@ import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
   const API_BASE = process.env.REACT_APP_API_BASE_URL;
+  //const API_BASE = "http://localhost:8080";
   const [items, setItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState("");
 
@@ -212,6 +213,7 @@ function Meals() {
   return (
     <div className="Forms">
       <img
+        className="flex-item"
         src="/thickporg_1.png"
         alt="Meal"
         style={{
@@ -223,9 +225,8 @@ function Meals() {
           e.currentTarget.style.display = "none";
         }}
       />
-
-      <label htmlFor="item"></label>
       <select
+        className="flex-item"
         id="item"
         value={selectedItemId}
         onChange={(e) => setSelectedItemId(e.target.value)}
@@ -243,7 +244,6 @@ function Meals() {
           </option>
         ))}
       </select>
-
       {/* NEW: Custom meal form */}
       {isCustomSelected && (
         <div style={{ marginTop: 12, padding: 12, background: "#f6f6f6" }}>
@@ -302,7 +302,6 @@ function Meals() {
           </div>
         </div>
       )}
-
       {/* Existing selected item display */}
       {!isCustomSelected && selectedItem ? (
         <div style={{ marginTop: 12 }}>
@@ -317,35 +316,30 @@ function Meals() {
           </div>
         </div>
       ) : null}
-
       {/* Add button works for both generic + custom */}
-      <button
-        type="button"
-        onClick={handleAddToGrocery}
-        disabled={
-          sendLoading ||
-          (!isCustomSelected && !selectedItem) ||
-          (isCustomSelected && !customName.trim())
-        }
-        style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
-      >
-        {sendLoading ? "Adding..." : "Add Meal For Today"}
-      </button>
-
+      <div className="flex-item">
+        <button
+          type="button"
+          onClick={handleAddToGrocery}
+          disabled={
+            sendLoading ||
+            (!isCustomSelected && !selectedItem) ||
+            (isCustomSelected && !customName.trim())
+          }
+          style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
+        >
+          {sendLoading ? "Adding..." : "Add Meal For Today"}
+        </button>
+      </div>
       {sendError && (
         <div style={{ marginTop: 10, color: "red" }}>Error: {sendError}</div>
       )}
-
       {sendResult && (
         <pre style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
           {JSON.stringify(sendResult, null, 2)}
         </pre>
       )}
-
-      <hr style={{ margin: "20px 0" }} />
-
       <h3 style={{ margin: "0 0 10px" }}>View Meals for a Day</h3>
-
       <form onSubmit={handleDailyMealsSubmit}>
         <label htmlFor="date">
           <strong>Date (YYYY-MM-DD):</strong>
@@ -371,99 +365,95 @@ function Meals() {
           {dailyLoading ? "Loading..." : "Load meals for date"}
         </button>
       </form>
-
-      {dailyError && (
-        <div style={{ marginTop: 10, color: "red" }}>Error: {dailyError}</div>
-      )}
-
-      {!dailyLoading && !dailyError && (
-        <div style={{ marginTop: 12 }}>
-          <strong>Meals:</strong> {dailyMeals.length}
-        </div>
-      )}
-
-      {dailyMeals.length > 0 && (
-        <div style={{ marginTop: 12 }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              background: "#fff",
-            }}
-          >
-            <thead>
-              <tr>
-                <th
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Name
-                </th>
-                <th
-                  style={{
-                    textAlign: "right",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Calories
-                </th>
-                <th
-                  style={{
-                    textAlign: "right",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Protein
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dailyMeals.map((meal) => (
-                <tr key={meal.id}>
-                  <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
-                    {meal.name}
-                  </td>
-                  <td
+      <div className="flex-item">
+        {dailyError && (
+          <div style={{ marginTop: 10, color: "red" }}>Error: {dailyError}</div>
+        )}
+        {dailyMeals.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                background: "#fff",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
                     style={{
-                      borderBottom: "1px solid #eee",
+                      textAlign: "left",
+                      borderBottom: "1px solid #ddd",
                       padding: 8,
-                      textAlign: "right",
                     }}
                   >
-                    {meal.calories}
-                  </td>
-                  <td
+                    Name
+                  </th>
+                  <th
                     style={{
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
                       textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
                     }}
                   >
-                    {meal.protein}g
-                  </td>
+                    Calories
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Protein
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {dailyMeals.map((meal) => (
+                  <tr key={meal.id}>
+                    <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
+                      {meal.name}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.calories}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.protein}g
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
-            <strong>Totals:</strong> {totalCalories} cal, {totalProtein}g
-            protein
-            <br />
-            <strong>Remaining:</strong> {remainingCalories} cal,{" "}
-            {remainingProtein}g
+            <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
+              <strong>Totals: </strong> {totalCalories} cal, {totalProtein}g
+              protein
+              <br />
+              <strong> Remaining:</strong> {remainingCalories} cal,{" "}
+              {remainingProtein}g
+            </div>
           </div>
-        </div>
-      )}
-
-      {dailyMeals.length === 0 && !dailyLoading && dateInput && !dailyError && (
-        <div style={{ marginTop: 12 }}>No meals found for that date.</div>
-      )}
+        )}
+        {dailyMeals.length === 0 &&
+          !dailyLoading &&
+          dateInput &&
+          !dailyError && (
+            <div style={{ marginTop: 12 }}>No meals found for that date.</div>
+          )}
+      </div>
     </div>
   );
 }
