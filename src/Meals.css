@@ -25,8 +25,16 @@ body {
   width: 100% !important;
   display: flex;
   justify-content: center;
-  margin-top:2vh;
+  margin-top: 2vh;
 }
+
+/* Center the immediate content block inside .flex-item */
+.flex-item > div{
+  width: 75%;
+  margin: 0 auto;
+  display: block;   /* important: don't force it to be flex */
+}
+
 
 .flex-item img{
   width:10% !important;
@@ -49,14 +57,3 @@ body {
   margin-top:2vh !important;
  }
 
- .flex-item div{
-  width: 75% !important;
-  justify-content: center;
-  display: flex;
-  flex-wrap: wrap;
- }
-
- .flex-item div div{
-  width: 100% !important;
-  gap: 1vw;
- }
