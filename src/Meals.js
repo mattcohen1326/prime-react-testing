@@ -57,7 +57,7 @@ function Meals() {
     };
 
     loadItems();
-  }, []);
+  }, [API_BASE]);
 
   // When switching away from Custom, clear custom form + previous send result/errors
   useEffect(() => {
