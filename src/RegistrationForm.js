@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import bcrypt from "bcryptjs";
 import "./RegistrationForm.css";
 
 function RegistrationForm() {
@@ -15,9 +14,6 @@ function RegistrationForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8080/register");
     xhr.onload = function () {
@@ -25,7 +21,7 @@ function RegistrationForm() {
         setData(JSON.parse(xhr.responseText));
       }
     };
-    const payload = { username: username, password: hashedPassword };
+    const payload = { username: username, password: password };
     xhr.send(JSON.stringify(payload));
   };
 
