@@ -5,6 +5,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import Request from "./Request.js";
 import RegistrationForm from "./RegistrationForm.js";
 import Meals from "./Meals.js";
+import Workouts from "./Workouts.js";
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Meals />} />
         <Route path="/homescreen" element={<HomeScreen />} />
         <Route path="/meals" element={<Meals />} />
+        <Route path="/workouts" element={<Workouts />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,81 @@
+/* Reuse Meals-style layout when this page is standalone */
+.Forms {
+  flex-wrap: wrap;
+  width: 90vw;
+  padding: 5vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.Forms .flex-item {
+  width: 100% !important;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+}
+
+.Forms .flex-item > div {
+  width: 75%;
+  margin: 0 auto;
+  display: block;
+}
+
+.Forms form {
+  width: 75%;
+  display: flex;
+  justify-content: center;
+  padding: 2vw;
+  margin-top: 2vh;
+}
+
+.Forms h3 {
+  width: 75%;
+  text-align: center;
+  margin-top: 2vh !important;
+}
+
+.workouts-nav {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.workouts-nav a {
+  color: #0066ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.workouts-nav a:hover {
+  text-decoration: underline;
+}
+
+.nav-sep {
+  color: #666;
+  user-select: none;
+}
+
+.workouts-page-title {
+  width: 100%;
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.workout-add-form {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2vw;
+  margin-top: 2vh;
+}
+
+.workout-add-form .flex-item {
+  width: 100%;
+  max-width: 400px;
+}
