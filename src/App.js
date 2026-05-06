@@ -4,6 +4,7 @@ import Workouts from "./Workouts.js";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomeScreen from "./HomeScreen.js";
 
+// Main App component with routing
 function App() {
   return (
     <BrowserRouter>
