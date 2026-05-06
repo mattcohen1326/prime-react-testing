@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
@@ -28,6 +29,11 @@ function Meals() {
   const [customName, setCustomName] = useState("");
   const [customCalories, setCustomCalories] = useState("");
   const [customProtein, setCustomProtein] = useState("");
+
+  // AI nutrition lookup
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutritionError, setNutritionError] = useState("");
+
   console.log("API_BASE:", API_BASE);
   const DAILY_MEALS_ENDPOINT = `${API_BASE}/meals/getMealsForDay`;
 
@@ -51,7 +57,7 @@ function Meals() {
     };
 
     loadItems();
-  }, []);
+  }, [API_BASE]);
 
   // When switching away from Custom, clear custom form + previous send result/errors
   useEffect(() => {
@@ -67,7 +73,7 @@ function Meals() {
 
   const selectedItem = useMemo(
     () => items.find((m) => String(m.id) === String(selectedItemId)),
-    [items, selectedItemId]
+    [items, selectedItemId],
   );
 
   // Helper: local YYYY-MM-DD (avoids UTC date edge case near midnight)
@@ -75,6 +81,40 @@ function Meals() {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 10);
+  };
+
+  const handleGetNutritionInfo = async () => {
+    const name = customName.trim();
+    if (!name) {
+      setNutritionError("Please enter a meal name first.");
+      return;
+    }
+
+    try {
+      setNutritionLoading(true);
+      setNutritionError("");
+
+      const res = await fetch(`${API_BASE}/meals/getNutritionInfo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foodName: name }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(
+          `Failed to get nutrition info (HTTP ${res.status})${text ? `: ${text}` : ""}`,
+        );
+      }
+
+      const data = await res.json();
+      setCustomCalories(String(data.calories));
+      setCustomProtein(String(data.protein));
+    } catch (e) {
+      setNutritionError(e?.message || "Failed to get nutrition info");
+    } finally {
+      setNutritionLoading(false);
+    }
   };
 
   const handleAddToGrocery = async () => {
@@ -130,7 +170,7 @@ function Meals() {
       if (!res.ok) {
         const text = await res.text().catch(() => "");
         throw new Error(
-          `Failed to add meal (HTTP ${res.status})${text ? `: ${text}` : ""}`
+          `Failed to add meal (HTTP ${res.status})${text ? `: ${text}` : ""}`,
         );
       }
 
@@ -170,7 +210,7 @@ function Meals() {
         throw new Error(
           `Failed to load meals for ${dateStr} (HTTP ${res.status})${
             text ? `: ${text}` : ""
-          }`
+          }`,
         );
       }
 
@@ -200,18 +240,37 @@ function Meals() {
 
   const totalCalories = dailyMeals.reduce(
     (sum, m) => sum + (Number(m.calories) || 0),
-    0
+    0,
   );
 
   const totalProtein = dailyMeals.reduce(
     (sum, m) => sum + (Number(m.protein) || 0),
-    0
+    0,
   );
 
   const remainingCalories = 2000 - totalCalories;
   const remainingProtein = 220 - totalProtein;
   return (
     <div className="Forms">
+      <nav
+        style={{
+          width: "100%",
+          marginBottom: 16,
+          padding: "8px 0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+        }}
+      >
+        <Link to="/meals" style={{ color: "#0066ff", fontWeight: 600 }}>
+          Meals
+        </Link>
+        <span style={{ color: "#666" }}>|</span>
+        <Link to="/workouts" style={{ color: "#0066ff", fontWeight: 600 }}>
+          Workouts
+        </Link>
+      </nav>
       <img
         className="flex-item"
         src="/thickporg_1.png"
@@ -262,6 +321,28 @@ function Meals() {
                 marginTop: 6,
               }}
             />
+            <button
+              type="button"
+              onClick={handleGetNutritionInfo}
+              disabled={nutritionLoading || !customName.trim()}
+              style={{
+                marginTop: 8,
+                padding: "6px 12px",
+                background: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: 4,
+                cursor: "pointer",
+                opacity: nutritionLoading || !customName.trim() ? 0.6 : 1,
+              }}
+            >
+              {nutritionLoading ? "Getting info..." : "Get Nutrition Info"}
+            </button>
+            {nutritionError && (
+              <div style={{ marginTop: 6, color: "red", fontSize: "0.9em" }}>
+                {nutritionError}
+              </div>
+            )}
           </div>
 
           <div style={{ display: "flex", gap: 10 }}>
