@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+  //const API_BASE = "http://localhost:8080";
   const [items, setItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState("");
 
@@ -27,7 +30,12 @@ function Meals() {
   const [customCalories, setCustomCalories] = useState("");
   const [customProtein, setCustomProtein] = useState("");
 
-  const DAILY_MEALS_ENDPOINT = "http://localhost:8080/meals/getMealsForDay";
+  // AI nutrition lookup
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutritionError, setNutritionError] = useState("");
+
+  console.log("API_BASE:", API_BASE);
+  const DAILY_MEALS_ENDPOINT = `${API_BASE}/meals/getMealsForDay`;
 
   useEffect(() => {
     const loadItems = async () => {
@@ -35,7 +43,7 @@ function Meals() {
         setLoadingItems(true);
         setItemsError("");
 
-        const res = await fetch("http://localhost:8080/generic_meals/get_all");
+        const res = await fetch(`${API_BASE}/generic_meals/get_all`);
         if (!res.ok)
           throw new Error(`Failed to load items (HTTP ${res.status})`);
 
@@ -49,7 +57,7 @@ function Meals() {
     };
 
     loadItems();
-  }, []);
+  }, [API_BASE]);
 
   // When switching away from Custom, clear custom form + previous send result/errors
   useEffect(() => {
@@ -73,6 +81,40 @@ function Meals() {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 10);
+  };
+
+  const handleGetNutritionInfo = async () => {
+    const name = customName.trim();
+    if (!name) {
+      setNutritionError("Please enter a meal name first.");
+      return;
+    }
+
+    try {
+      setNutritionLoading(true);
+      setNutritionError("");
+
+      const res = await fetch(`${API_BASE}/meals/getNutritionInfo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foodName: name }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(
+          `Failed to get nutrition info (HTTP ${res.status})${text ? `: ${text}` : ""}`,
+        );
+      }
+
+      const data = await res.json();
+      setCustomCalories(String(data.calories));
+      setCustomProtein(String(data.protein));
+    } catch (e) {
+      setNutritionError(e?.message || "Failed to get nutrition info");
+    } finally {
+      setNutritionLoading(false);
+    }
   };
 
   const handleAddToGrocery = async () => {
@@ -119,7 +161,7 @@ function Meals() {
       setSendError("");
       setSendResult(null);
 
-      const res = await fetch("http://localhost:8080/meals/addMeal", {
+      const res = await fetch(`${API_BASE}/meals/addMeal`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -209,8 +251,32 @@ function Meals() {
   const remainingCalories = 2000 - totalCalories;
   const remainingProtein = 220 - totalProtein;
   return (
+<<<<<<< HEAD
     <main className="meal-page">
+=======
+    <div className="Forms">
+      <nav
+        style={{
+          width: "100%",
+          marginBottom: 16,
+          padding: "8px 0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+        }}
+      >
+        <Link to="/meals" style={{ color: "#0066ff", fontWeight: 600 }}>
+          Meals
+        </Link>
+        <span style={{ color: "#666" }}>|</span>
+        <Link to="/workouts" style={{ color: "#0066ff", fontWeight: 600 }}>
+          Workouts
+        </Link>
+      </nav>
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
       <img
+        className="flex-item"
         src="/thickporg_1.png"
         alt="Meal"
         style={{
@@ -223,6 +289,7 @@ function Meals() {
           e.currentTarget.style.display = "none";
         }}
       />
+<<<<<<< HEAD
       <div className="Forms">
         <label htmlFor="item"></label>
         <select
@@ -235,6 +302,16 @@ function Meals() {
 
           {/* NEW: Custom option */}
           <option value={CUSTOM_OPTION_VALUE}>Custom...</option>
+=======
+      <select
+        className="flex-item"
+        id="item"
+        value={selectedItemId}
+        onChange={(e) => setSelectedItemId(e.target.value)}
+        style={{ display: "block", width: "100%", padding: 8, marginTop: 6 }}
+      >
+        <option value="">-- Select an item --</option>
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
 
           {/* Existing generic meals */}
           {items.map((item) => (
@@ -244,10 +321,64 @@ function Meals() {
           ))}
         </select>
 
+<<<<<<< HEAD
         {/* NEW: Custom meal form */}
         {isCustomSelected && (
           <div style={{ marginTop: 12, padding: 12, background: "#f6f6f6" }}>
             <div style={{ marginBottom: 8 }}>
+=======
+        {/* Existing generic meals */}
+        {items.map((item) => (
+          <option key={item.id} value={item.id}>
+            {item.name}
+          </option>
+        ))}
+      </select>
+      {/* NEW: Custom meal form */}
+      {isCustomSelected && (
+        <div style={{ marginTop: 12, padding: 12, background: "#f6f6f6" }}>
+          <div style={{ marginBottom: 8 }}>
+            <label>
+              <strong>Name</strong>
+            </label>
+            <input
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              placeholder="e.g., Chicken stir-fry"
+              style={{
+                display: "block",
+                width: "100%",
+                padding: 8,
+                marginTop: 6,
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleGetNutritionInfo}
+              disabled={nutritionLoading || !customName.trim()}
+              style={{
+                marginTop: 8,
+                padding: "6px 12px",
+                background: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: 4,
+                cursor: "pointer",
+                opacity: nutritionLoading || !customName.trim() ? 0.6 : 1,
+              }}
+            >
+              {nutritionLoading ? "Getting info..." : "Get Nutrition Info"}
+            </button>
+            {nutritionError && (
+              <div style={{ marginTop: 6, color: "red", fontSize: "0.9em" }}>
+                {nutritionError}
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ flex: 1 }}>
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
               <label>
                 <strong>Name</strong>
               </label>
@@ -301,6 +432,7 @@ function Meals() {
               </div>
             </div>
           </div>
+<<<<<<< HEAD
         )}
 
         {/* Existing selected item display */}
@@ -317,6 +449,64 @@ function Meals() {
             </div>
           </div>
         ) : null}
+=======
+        </div>
+      )}
+      {/* Existing selected item display */}
+      {!isCustomSelected && selectedItem ? (
+        <div style={{ marginTop: 12 }}>
+          <div>
+            <strong>Selected:</strong> {selectedItem.name}
+          </div>
+          <div>
+            <strong>Calories:</strong> {selectedItem.calories}
+          </div>
+          <div>
+            <strong>Protein:</strong> {selectedItem.protein}
+          </div>
+        </div>
+      ) : null}
+      {/* Add button works for both generic + custom */}
+      <div className="flex-item">
+        <button
+          type="button"
+          onClick={handleAddToGrocery}
+          disabled={
+            sendLoading ||
+            (!isCustomSelected && !selectedItem) ||
+            (isCustomSelected && !customName.trim())
+          }
+          style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
+        >
+          {sendLoading ? "Adding..." : "Add Meal For Today"}
+        </button>
+      </div>
+      {sendError && (
+        <div style={{ marginTop: 10, color: "red" }}>Error: {sendError}</div>
+      )}
+      {sendResult && (
+        <pre style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
+          {JSON.stringify(sendResult, null, 2)}
+        </pre>
+      )}
+      <h3 style={{ margin: "0 0 10px" }}>View Meals for a Day</h3>
+      <form onSubmit={handleDailyMealsSubmit}>
+        <label htmlFor="date">
+          <strong>Date (YYYY-MM-DD):</strong>
+        </label>
+        <input
+          id="date"
+          value={dateInput}
+          onChange={(e) => setDateInput(e.target.value)}
+          placeholder="2026-01-08"
+          style={{
+            display: "block",
+            width: "100%",
+            padding: 8,
+            marginTop: 6,
+          }}
+        />
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
 
         {/* Add button works for both generic + custom */}
         <button
@@ -331,6 +521,7 @@ function Meals() {
         >
           {sendLoading ? "Adding..." : "Add Meal For Today"}
         </button>
+<<<<<<< HEAD
 
         {sendError && (
           <div style={{ marginTop: 10, color: "red" }}>Error: {sendError}</div>
@@ -461,6 +652,91 @@ function Meals() {
           </div>
         )}
 
+=======
+      </form>
+      <div className="flex-item">
+        {dailyError && (
+          <div style={{ marginTop: 10, color: "red" }}>Error: {dailyError}</div>
+        )}
+        {dailyMeals.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                background: "#fff",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      textAlign: "left",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Name
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Calories
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Protein
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dailyMeals.map((meal) => (
+                  <tr key={meal.id}>
+                    <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
+                      {meal.name}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.calories}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.protein}g
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
+              <strong>Totals: </strong> {totalCalories} cal, {totalProtein}g
+              protein
+              <br />
+              <strong> Remaining:</strong> {remainingCalories} cal,{" "}
+              {remainingProtein}g
+            </div>
+          </div>
+        )}
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
         {dailyMeals.length === 0 &&
           !dailyLoading &&
           dateInput &&
@@ -468,7 +744,11 @@ function Meals() {
             <div style={{ marginTop: 12 }}>No meals found for that date.</div>
           )}
       </div>
+<<<<<<< HEAD
     </main>
+=======
+    </div>
+>>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
   );
 }
 

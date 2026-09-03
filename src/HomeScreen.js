@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import RegistrationForm from "./RegistrationForm";
+import React from "react";
 import "./HomeScreen.css";
 import SignInCard from "./SignInCard";
 
