@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import "./Meals.css";
 function Meals() {
   // Generic meals (dropdown list)
@@ -30,10 +29,6 @@ function Meals() {
   const [customName, setCustomName] = useState("");
   const [customCalories, setCustomCalories] = useState("");
   const [customProtein, setCustomProtein] = useState("");
-
-  // AI nutrition lookup
-  const [nutritionLoading, setNutritionLoading] = useState(false);
-  const [nutritionError, setNutritionError] = useState("");
 
   const DAILY_MEALS_ENDPOINT = `${API_BASE}/meals/getMealsForDay`;
 
@@ -81,40 +76,6 @@ function Meals() {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 10);
-  };
-
-  const handleGetNutritionInfo = async () => {
-    const name = customName.trim();
-    if (!name) {
-      setNutritionError("Please enter a meal name first.");
-      return;
-    }
-
-    try {
-      setNutritionLoading(true);
-      setNutritionError("");
-
-      const res = await fetch(`${API_BASE}/meals/getNutritionInfo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foodName: name }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(
-          `Failed to get nutrition info (HTTP ${res.status})${text ? `: ${text}` : ""}`,
-        );
-      }
-
-      const data = await res.json();
-      setCustomCalories(String(data.calories));
-      setCustomProtein(String(data.protein));
-    } catch (e) {
-      setNutritionError(e?.message || "Failed to get nutrition info");
-    } finally {
-      setNutritionLoading(false);
-    }
   };
 
   const handleAddToGrocery = async () => {
