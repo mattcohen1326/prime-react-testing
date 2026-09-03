@@ -40,7 +40,7 @@ function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="auth-form" onSubmit={handleSubmit}>
       <div>
         <h1>Username</h1>
         <input

@@ -65,7 +65,7 @@ function Meals() {
 
   const selectedItem = useMemo(
     () => items.find((m) => String(m.id) === String(selectedItemId)),
-    [items, selectedItemId]
+    [items, selectedItemId],
   );
 
   // Helper: local YYYY-MM-DD (avoids UTC date edge case near midnight)
@@ -128,7 +128,7 @@ function Meals() {
       if (!res.ok) {
         const text = await res.text().catch(() => "");
         throw new Error(
-          `Failed to add meal (HTTP ${res.status})${text ? `: ${text}` : ""}`
+          `Failed to add meal (HTTP ${res.status})${text ? `: ${text}` : ""}`,
         );
       }
 
@@ -168,7 +168,7 @@ function Meals() {
         throw new Error(
           `Failed to load meals for ${dateStr} (HTTP ${res.status})${
             text ? `: ${text}` : ""
-          }`
+          }`,
         );
       }
 
@@ -198,23 +198,24 @@ function Meals() {
 
   const totalCalories = dailyMeals.reduce(
     (sum, m) => sum + (Number(m.calories) || 0),
-    0
+    0,
   );
 
   const totalProtein = dailyMeals.reduce(
     (sum, m) => sum + (Number(m.protein) || 0),
-    0
+    0,
   );
 
   const remainingCalories = 2000 - totalCalories;
   const remainingProtein = 220 - totalProtein;
   return (
-    <div className="Forms">
+    <main className="meal-page">
       <img
         src="/thickporg_1.png"
         alt="Meal"
         style={{
-          width: "100%",
+          width: "10%",
+          margin: "2%",
           maxWidth: 320,
           display: "block",
         }}
@@ -222,57 +223,38 @@ function Meals() {
           e.currentTarget.style.display = "none";
         }}
       />
+      <div className="Forms">
+        <label htmlFor="item"></label>
+        <select
+          id="item"
+          value={selectedItemId}
+          onChange={(e) => setSelectedItemId(e.target.value)}
+          style={{ display: "block", width: "100%", padding: 8, marginTop: 6 }}
+        >
+          <option value="">-- Select an item --</option>
 
-      <label htmlFor="item"></label>
-      <select
-        id="item"
-        value={selectedItemId}
-        onChange={(e) => setSelectedItemId(e.target.value)}
-        style={{ display: "block", width: "100%", padding: 8, marginTop: 6 }}
-      >
-        <option value="">-- Select an item --</option>
+          {/* NEW: Custom option */}
+          <option value={CUSTOM_OPTION_VALUE}>Custom...</option>
 
-        {/* NEW: Custom option */}
-        <option value={CUSTOM_OPTION_VALUE}>Custom...</option>
+          {/* Existing generic meals */}
+          {items.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
 
-        {/* Existing generic meals */}
-        {items.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.name}
-          </option>
-        ))}
-      </select>
-
-      {/* NEW: Custom meal form */}
-      {isCustomSelected && (
-        <div style={{ marginTop: 12, padding: 12, background: "#f6f6f6" }}>
-          <div style={{ marginBottom: 8 }}>
-            <label>
-              <strong>Name</strong>
-            </label>
-            <input
-              value={customName}
-              onChange={(e) => setCustomName(e.target.value)}
-              placeholder="e.g., Chicken stir-fry"
-              style={{
-                display: "block",
-                width: "100%",
-                padding: 8,
-                marginTop: 6,
-              }}
-            />
-          </div>
-
-          <div style={{ display: "flex", gap: 10 }}>
-            <div style={{ flex: 1 }}>
+        {/* NEW: Custom meal form */}
+        {isCustomSelected && (
+          <div style={{ marginTop: 12, padding: 12, background: "#f6f6f6" }}>
+            <div style={{ marginBottom: 8 }}>
               <label>
-                <strong>Calories</strong>
+                <strong>Name</strong>
               </label>
               <input
-                value={customCalories}
-                onChange={(e) => setCustomCalories(e.target.value)}
-                placeholder="e.g., 650"
-                inputMode="numeric"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder="e.g., Chicken stir-fry"
                 style={{
                   display: "block",
                   width: "100%",
@@ -281,189 +263,212 @@ function Meals() {
                 }}
               />
             </div>
-            <div style={{ flex: 1 }}>
-              <label>
-                <strong>Protein (g)</strong>
-              </label>
-              <input
-                value={customProtein}
-                onChange={(e) => setCustomProtein(e.target.value)}
-                placeholder="e.g., 55"
-                inputMode="numeric"
-                style={{
-                  display: "block",
-                  width: "100%",
-                  padding: 8,
-                  marginTop: 6,
-                }}
-              />
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ flex: 1 }}>
+                <label>
+                  <strong>Calories</strong>
+                </label>
+                <input
+                  value={customCalories}
+                  onChange={(e) => setCustomCalories(e.target.value)}
+                  placeholder="e.g., 650"
+                  inputMode="numeric"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    padding: 8,
+                    marginTop: 6,
+                  }}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label>
+                  <strong>Protein (g)</strong>
+                </label>
+                <input
+                  value={customProtein}
+                  onChange={(e) => setCustomProtein(e.target.value)}
+                  placeholder="e.g., 55"
+                  inputMode="numeric"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    padding: 8,
+                    marginTop: 6,
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Existing selected item display */}
-      {!isCustomSelected && selectedItem ? (
-        <div style={{ marginTop: 12 }}>
-          <div>
-            <strong>Selected:</strong> {selectedItem.name}
+        {/* Existing selected item display */}
+        {!isCustomSelected && selectedItem ? (
+          <div style={{ marginTop: 12 }}>
+            <div>
+              <strong>Selected:</strong> {selectedItem.name}
+            </div>
+            <div>
+              <strong>Calories:</strong> {selectedItem.calories}
+            </div>
+            <div>
+              <strong>Protein:</strong> {selectedItem.protein}
+            </div>
           </div>
-          <div>
-            <strong>Calories:</strong> {selectedItem.calories}
-          </div>
-          <div>
-            <strong>Protein:</strong> {selectedItem.protein}
-          </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      {/* Add button works for both generic + custom */}
-      <button
-        type="button"
-        onClick={handleAddToGrocery}
-        disabled={
-          sendLoading ||
-          (!isCustomSelected && !selectedItem) ||
-          (isCustomSelected && !customName.trim())
-        }
-        style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
-      >
-        {sendLoading ? "Adding..." : "Add Meal For Today"}
-      </button>
-
-      {sendError && (
-        <div style={{ marginTop: 10, color: "red" }}>Error: {sendError}</div>
-      )}
-
-      {sendResult && (
-        <pre style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
-          {JSON.stringify(sendResult, null, 2)}
-        </pre>
-      )}
-
-      <hr style={{ margin: "20px 0" }} />
-
-      <h3 style={{ margin: "0 0 10px" }}>View Meals for a Day</h3>
-
-      <form onSubmit={handleDailyMealsSubmit}>
-        <label htmlFor="date">
-          <strong>Date (YYYY-MM-DD):</strong>
-        </label>
-        <input
-          id="date"
-          value={dateInput}
-          onChange={(e) => setDateInput(e.target.value)}
-          placeholder="2026-01-08"
-          style={{
-            display: "block",
-            width: "100%",
-            padding: 8,
-            marginTop: 6,
-          }}
-        />
-
+        {/* Add button works for both generic + custom */}
         <button
-          type="submit"
-          disabled={dailyLoading}
+          type="button"
+          onClick={handleAddToGrocery}
+          disabled={
+            sendLoading ||
+            (!isCustomSelected && !selectedItem) ||
+            (isCustomSelected && !customName.trim())
+          }
           style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
         >
-          {dailyLoading ? "Loading..." : "Load meals for date"}
+          {sendLoading ? "Adding..." : "Add Meal For Today"}
         </button>
-      </form>
 
-      {dailyError && (
-        <div style={{ marginTop: 10, color: "red" }}>Error: {dailyError}</div>
-      )}
+        {sendError && (
+          <div style={{ marginTop: 10, color: "red" }}>Error: {sendError}</div>
+        )}
 
-      {!dailyLoading && !dailyError && (
-        <div style={{ marginTop: 12 }}>
-          <strong>Meals:</strong> {dailyMeals.length}
-        </div>
-      )}
+        {sendResult && (
+          <pre style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
+            {JSON.stringify(sendResult, null, 2)}
+          </pre>
+        )}
 
-      {dailyMeals.length > 0 && (
-        <div style={{ marginTop: 12 }}>
-          <table
+        <hr style={{ margin: "20px 0" }} />
+
+        <h3 style={{ margin: "0 0 10px" }}>View Meals for a Day</h3>
+
+        <form onSubmit={handleDailyMealsSubmit}>
+          <label htmlFor="date">
+            <strong>Date (YYYY-MM-DD):</strong>
+          </label>
+          <input
+            id="date"
+            value={dateInput}
+            onChange={(e) => setDateInput(e.target.value)}
+            placeholder="2026-01-08"
             style={{
+              display: "block",
               width: "100%",
-              borderCollapse: "collapse",
-              background: "#fff",
+              padding: 8,
+              marginTop: 6,
             }}
+          />
+
+          <button
+            type="submit"
+            disabled={dailyLoading}
+            style={{ marginTop: 12, padding: "8px 12px", cursor: "pointer" }}
           >
-            <thead>
-              <tr>
-                <th
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Name
-                </th>
-                <th
-                  style={{
-                    textAlign: "right",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Calories
-                </th>
-                <th
-                  style={{
-                    textAlign: "right",
-                    borderBottom: "1px solid #ddd",
-                    padding: 8,
-                  }}
-                >
-                  Protein
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dailyMeals.map((meal) => (
-                <tr key={meal.id}>
-                  <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
-                    {meal.name}
-                  </td>
-                  <td
-                    style={{
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    {meal.calories}
-                  </td>
-                  <td
-                    style={{
-                      borderBottom: "1px solid #eee",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    {meal.protein}g
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            {dailyLoading ? "Loading..." : "Load meals for date"}
+          </button>
+        </form>
 
-          <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
-            <strong>Totals:</strong> {totalCalories} cal, {totalProtein}g
-            protein
-            <br />
-            <strong>Remaining:</strong> {remainingCalories} cal,{" "}
-            {remainingProtein}g
+        {dailyError && (
+          <div style={{ marginTop: 10, color: "red" }}>Error: {dailyError}</div>
+        )}
+
+        {!dailyLoading && !dailyError && (
+          <div style={{ marginTop: 12 }}>
+            <strong>Meals:</strong> {dailyMeals.length}
           </div>
-        </div>
-      )}
+        )}
 
-      {dailyMeals.length === 0 && !dailyLoading && dateInput && !dailyError && (
-        <div style={{ marginTop: 12 }}>No meals found for that date.</div>
-      )}
-    </div>
+        {dailyMeals.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                background: "#fff",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      textAlign: "left",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Name
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Calories
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      borderBottom: "1px solid #ddd",
+                      padding: 8,
+                    }}
+                  >
+                    Protein
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dailyMeals.map((meal) => (
+                  <tr key={meal.id}>
+                    <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
+                      {meal.name}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.calories}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: "1px solid #eee",
+                        padding: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      {meal.protein}g
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
+              <strong>Totals:</strong> {totalCalories} cal, {totalProtein}g
+              protein
+              <br />
+              <strong>Remaining:</strong> {remainingCalories} cal,{" "}
+              {remainingProtein}g
+            </div>
+          </div>
+        )}
+
+        {dailyMeals.length === 0 &&
+          !dailyLoading &&
+          dateInput &&
+          !dailyError && (
+            <div style={{ marginTop: 12 }}>No meals found for that date.</div>
+          )}
+      </div>
+    </main>
   );
 }
 

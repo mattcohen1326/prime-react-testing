@@ -37,9 +37,9 @@
   }
 }
 
-#menu{
-  width:100vw;
-  position:fixed;
-  top:0vh;
-  background-color: blueviolet;
+#menu {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: #20302a;
 }
