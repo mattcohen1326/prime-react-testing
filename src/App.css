@@ -57,29 +57,9 @@
   display: none;
 }
 
-<<<<<<< HEAD
 #menu {
   width: 100%;
   position: fixed;
   top: 0;
   background-color: #20302a;
-=======
-@media (max-width: 768px) {
-  .app-header {
-    padding: 1rem;
-  }
-
-  .app-header h1 {
-    font-size: 1.3rem;
-  }
-
-  .app-nav {
-    gap: 1rem;
-  }
-
-  .app-nav a {
-    padding: 0.4rem 1rem;
-    font-size: 0.9rem;
-  }
->>>>>>> 0f087bfcb210efb3779428dc557e57175b17db7b
 }

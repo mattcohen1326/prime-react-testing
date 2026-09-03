@@ -58,7 +58,7 @@ function Workouts() {
       return;
     }
     const filtered = workouts.filter(
-      (w) => String(w.date).slice(0, 10) === viewDate
+      (w) => String(w.date).slice(0, 10) === viewDate,
     );
     setDailyWorkouts(filtered);
   }, [workouts, viewDate]);
@@ -106,11 +106,11 @@ function Workouts() {
 
   const totalMinutes = dailyWorkouts.reduce(
     (sum, w) => sum + (Number(w.durationMinutes) || 0),
-    0
+    0,
   );
 
   return (
-    <div className="Forms">
+    <div className="Forms workouts-page">
       <nav className="workouts-nav">
         <Link to="/meals">Meals</Link>
         <span className="nav-sep">|</span>
@@ -128,7 +128,12 @@ function Workouts() {
           <select
             value={workoutType}
             onChange={(e) => setWorkoutType(e.target.value)}
-            style={{ display: "block", width: "100%", padding: 8, marginTop: 6 }}
+            style={{
+              display: "block",
+              width: "100%",
+              padding: 8,
+              marginTop: 6,
+            }}
           >
             <option value="cardio">Cardio</option>
             <option value="strength">Strength</option>
@@ -269,9 +274,7 @@ function Workouts() {
               <tbody>
                 {dailyWorkouts.map((w) => (
                   <tr key={w.id}>
-                    <td
-                      style={{ borderBottom: "1px solid #eee", padding: 8 }}
-                    >
+                    <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
                       {w.type}
                     </td>
                     <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
@@ -296,9 +299,7 @@ function Workouts() {
                 ))}
               </tbody>
             </table>
-            <div
-              style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}
-            >
+            <div style={{ marginTop: 10, background: "#f6f6f6", padding: 10 }}>
               <strong>Total: </strong>
               {totalMinutes} min
               {totalMinutes >= 60

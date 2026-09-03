@@ -1,5 +1,5 @@
 /* Reuse Meals-style layout when this page is standalone */
-.Forms {
+.workouts-page {
   flex-wrap: wrap;
   width: 90vw;
   padding: 5vw;
@@ -8,20 +8,20 @@
   justify-content: center;
 }
 
-.Forms .flex-item {
+.workouts-page .flex-item {
   width: 100% !important;
   display: flex;
   justify-content: center;
   margin-top: 2vh;
 }
 
-.Forms .flex-item > div {
+.workouts-page .flex-item > div {
   width: 75%;
   margin: 0 auto;
   display: block;
 }
 
-.Forms form {
+.workouts-page form {
   width: 75%;
   display: flex;
   justify-content: center;
@@ -29,7 +29,7 @@
   margin-top: 2vh;
 }
 
-.Forms h3 {
+.workouts-page h3 {
   width: 75%;
   text-align: center;
   margin-top: 2vh !important;
